@@ -1,0 +1,7 @@
+Deploy
+Script execution error
+File "C:\Users\manik\OneDrive\Documents\FinGuard AI\app.py", line 386
+          for i, alert in enumerate(alerts):
+          ^
+IndentationError: expected an indented block after 'with' statement on line 385
+Close

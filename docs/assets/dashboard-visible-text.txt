@@ -1,0 +1,135 @@
+🛡️ FinGuard AI
+
+UPI Fraud Detection · Explainable AI
+
+Model v2.0.0 · Offline explainability
+
+🌐 Language / भाषा
+
+English
+
+हिंदी
+
+🎮 Demo Controls
+
+Synthetic transactions only · no bank or NPCI connection
+
+⚡ Fraud Txn
+
+✅ Safe Txn
+
+▶ Start Live Feed
+
+🗑️ Clear All
+
+🔍 Manual Check
+
+Amount (₹)
+
+Hour of day
+
+2
+
+0
+
+23
+
+New/changed device
+
+Distance from last txn (km)
+
+Txns per hour
+
+New merchant
+
+Category
+
+electronics
+
+Analyze 🔎
+
+Deploy
+
+12
+
+📡 Session Transactions
+
+4
+
+🚨 Fraud Alerts
+
+33.33%
+
+📊 Session Fraud Rate
+
+₹1.5L
+
+🛡️ Flagged Value
+
+📡 Live Feed
+
+🚨 Fraud Alerts
+
+📊 Analytics
+
+🗓️ 7-Day Fraud Volume
+6
+8
+5
+11
+7
+9
+4
+Sun 14
+Mon 15
+Tue 16
+Wed 17
+Thu 18
+Fri 19
+Sat 20
+0
+2
+4
+6
+8
+10
+12
+🎯 Fraud by Attack Pattern
+Late-Night High Value30%
+Device + Geo Jump30%
+Velocity Attack25%
+Social Engineering15%
+📊 Risk Score Distribution (Current Session)
+0
+20
+40
+60
+80
+0
+1
+2
+3
+Risk Score (0–100)
+count
+Calibrated threshold (60)
+🔥 Fraud Heatmap — Hour of Day vs Amount Bracket
+< ₹500
+₹500–2K
+₹2K–10K
+₹10K–30K
+> ₹30K
+0
+5
+10
+15
+20
+0
+20
+40
+60
+80
+100
+Amount Bracket
+Hour of Day
+
+Heatmap based on synthetic training distribution — shows concentration of fraudulent transactions in late-night high-value brackets.

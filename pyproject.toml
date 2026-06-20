@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["api", "generate_data", "groq_client", "predictor", "train"]
+omit = ["app.py"]

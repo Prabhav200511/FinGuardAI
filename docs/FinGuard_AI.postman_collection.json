@@ -1,0 +1,40 @@
+{
+  "info": {
+    "name": "FinGuard AI API",
+    "description": "Local API requests for the FinGuard AI MVP.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:8000"}
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {"method": "GET", "url": "{{base_url}}/health"}
+    },
+    {
+      "name": "Predict suspicious transaction",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transaction_id\": \"DEMO-001\",\n  \"amount\": 45000,\n  \"hour\": 2,\n  \"merchant_category\": \"electronics\",\n  \"device_change\": 1,\n  \"geo_distance_km\": 850,\n  \"velocity_per_hour\": 2,\n  \"is_new_merchant\": 1,\n  \"language\": \"english\"\n}"
+        },
+        "url": "{{base_url}}/predict"
+      }
+    },
+    {
+      "name": "Explain in Hindi",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transaction_id\": \"DEMO-HI-001\",\n  \"amount\": 45000,\n  \"hour\": 2,\n  \"merchant_category\": \"electronics\",\n  \"device_change\": 1,\n  \"geo_distance_km\": 850,\n  \"velocity_per_hour\": 2,\n  \"is_new_merchant\": 1,\n  \"language\": \"hindi\"\n}"
+        },
+        "url": "{{base_url}}/explain"
+      }
+    }
+  ]
+}

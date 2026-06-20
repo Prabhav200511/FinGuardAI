@@ -1,0 +1,53 @@
+{
+  "model_version": "2.0.0",
+  "random_state": 42,
+  "training_rows": 7200,
+  "test_rows": 2000,
+  "test_fraud_rows": 200,
+  "low_score": -0.24150105351938328,
+  "high_score": 0.10942293819525598,
+  "threshold": 60.25,
+  "input_features": [
+    "amount",
+    "hour",
+    "device_change",
+    "geo_distance_km",
+    "velocity_per_hour",
+    "is_new_merchant",
+    "merchant_category"
+  ],
+  "transformed_features": [
+    "numeric__amount",
+    "numeric__hour",
+    "numeric__device_change",
+    "numeric__geo_distance_km",
+    "numeric__velocity_per_hour",
+    "numeric__is_new_merchant",
+    "category__merchant_category_clothing",
+    "category__merchant_category_education",
+    "category__merchant_category_electronics",
+    "category__merchant_category_entertainment",
+    "category__merchant_category_fuel",
+    "category__merchant_category_grocery",
+    "category__merchant_category_pharmacy",
+    "category__merchant_category_restaurant",
+    "category__merchant_category_transport",
+    "category__merchant_category_utilities"
+  ],
+  "shap_available": true,
+  "f1": 0.9975,
+  "roc_auc": 0.9999,
+  "precision_fraud": 1.0,
+  "recall_fraud": 0.995,
+  "confusion_matrix": [
+    [
+      1800,
+      0
+    ],
+    [
+      1,
+      199
+    ]
+  ],
+  "evaluation_note": "Metrics are from a stratified 20% held-out synthetic test set."
+}

@@ -1,0 +1,11 @@
+console: Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED
+console: Failed to fetch metrics config: TypeError: Failed to fetch
+    at PMe.requestDefaultMetricsConfig (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:9975)
+    at PMe.initialize (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:9318)
+    at y.handleInitialization (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:24762)
+    at y.handleNewSession (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:23559)
+    at Object.newSession (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:18570)
+    at t (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:18485)
+    at Object.handleMessage [as onMessage] (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:188:18539)
+    at a9.handleMessage (http://127.0.0.1:8501/static/js/index.dkY5s53S.js:184:3810)
+console: Undefined metrics config - deactivating metrics tracking.

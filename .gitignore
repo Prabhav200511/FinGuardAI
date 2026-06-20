@@ -1,0 +1,16 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+*.py[cod]
+.streamlit/secrets.toml
+build/
+dist/
+*.egg-info/
+scratch/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
