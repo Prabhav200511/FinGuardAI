@@ -9,7 +9,7 @@ import { Analytics } from './components/Analytics';
 import { fetchDemoFeed, fetchPrediction, type Transaction } from './api/client';
 import { Activity, AlertTriangle, ShieldCheck, Sparkles } from 'lucide-react';
 
-const THRESHOLD = 65;
+const THRESHOLD = 60;
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'live' | 'alerts' | 'analytics'>('live');

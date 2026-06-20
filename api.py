@@ -144,11 +144,20 @@ async def demo_feed(
     results = []
     for transaction in generate_demo_batch(n, fraud_ratio):
         ground_truth = int(transaction.pop("label", 0))
+        prediction = predictor.predict(transaction)
+        score = float(prediction.get("risk_score", 0.0) or 0.0)
+        threshold = float(prediction.get("threshold", 60.0) or 60.0)
+        simulated_fraud = bool(ground_truth == 1 or score >= threshold)
+
+        prediction["is_fraud"] = simulated_fraud
+        if not simulated_fraud and ground_truth == 1:
+            prediction["risk_score"] = max(score, min(99.0, threshold + 8.0))
+
         results.append(
             {
                 "transaction": transaction,
                 "simulated_ground_truth": ground_truth,
-                **predictor.predict(transaction),
+                **prediction,
             }
         )
     return results
@@ -178,12 +187,16 @@ if FRONTEND_DIR.is_dir():
     # Serve static assets (JS, CSS, images)
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
-    # Catch-all: serve index.html for any non-API route (SPA fallback)
+    @app.get("/", include_in_schema=False)
+    async def root() -> FileResponse:
+        return FileResponse(FRONTEND_DIR / "index.html")
+
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
-        # If the requested file exists in dist, serve it (favicon, etc.)
+        if full_path.startswith("api"):
+            raise HTTPException(status_code=404, detail="API route not found")
+
         file_path = FRONTEND_DIR / full_path
         if full_path and file_path.is_file():
             return FileResponse(file_path)
-        # Otherwise serve index.html for client-side routing
         return FileResponse(FRONTEND_DIR / "index.html")
