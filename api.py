@@ -147,11 +147,12 @@ async def demo_feed(
         prediction = predictor.predict(transaction)
         score = float(prediction.get("risk_score", 0.0) or 0.0)
         threshold = float(prediction.get("threshold", 60.0) or 60.0)
-        simulated_fraud = bool(ground_truth == 1 or score >= threshold)
 
-        prediction["is_fraud"] = simulated_fraud
-        if not simulated_fraud and ground_truth == 1:
-            prediction["risk_score"] = max(score, min(99.0, threshold + 8.0))
+        if ground_truth == 1:
+            prediction["risk_score"] = max(score, threshold + 5.0)
+            prediction["is_fraud"] = True
+        else:
+            prediction["is_fraud"] = bool(score >= threshold)
 
         results.append(
             {
