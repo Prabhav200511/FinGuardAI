@@ -7,7 +7,7 @@ import { LiveFeed } from './components/LiveFeed';
 import { FraudAlerts } from './components/FraudAlerts';
 import { Analytics } from './components/Analytics';
 import { fetchDemoFeed, fetchPrediction, type Transaction } from './api/client';
-import { ShieldCheck } from 'lucide-react';
+import { Activity, AlertTriangle, ShieldCheck, Sparkles } from 'lucide-react';
 
 const THRESHOLD = 65;
 
@@ -85,6 +85,8 @@ export default function App() {
   }, [liveActive, addEnrichedTransaction]);
 
   const fraudAlerts = transactions.filter(t => (t.risk_score ?? 0) >= THRESHOLD);
+  const highRiskCount = fraudAlerts.length;
+  const liveSummary = liveActive ? 'Streaming live transactions' : 'Simulation paused';
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-200 flex overflow-hidden font-sans selection:bg-blue-500/30">
@@ -117,30 +119,51 @@ export default function App() {
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[100px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/10 blur-[100px] pointer-events-none" />
 
-        {/* Top Stats Row */}
-        <div className="p-6 pb-2 sticky top-0 z-20 flex gap-4">
-          <Card className="flex-1 bg-slate-900/40 backdrop-blur-md border-slate-800/60 shadow-xl">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div>
-                <div className="text-sm text-slate-400 uppercase tracking-widest font-semibold mb-1">Total Monitored</div>
-                <div className="text-4xl font-bold text-slate-100">{stats.total}</div>
+        {/* Top Summary */}
+        <div className="p-6 pb-2 sticky top-0 z-20 space-y-4">
+          <div className="rounded-2xl border border-slate-800/60 bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-blue-950/40 p-5 shadow-2xl shadow-blue-950/10 backdrop-blur-xl">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-emerald-300">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Explainable UPI fraud defense
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold text-white">Real-time anomaly monitoring for digital payments</h2>
+                  <p className="mt-1 max-w-2xl text-sm text-slate-400">Simulate suspicious activity, inspect the top SHAP drivers, and review the alert stream in one place.</p>
+                </div>
               </div>
-              <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                <span className="text-blue-400 text-xl">📡</span>
+              <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium ${liveActive ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/20 bg-amber-500/10 text-amber-300'}`}>
+                <Activity className="h-4 w-4" />
+                {liveSummary}
               </div>
-            </CardContent>
-          </Card>
-          <Card className="flex-1 bg-slate-900/40 backdrop-blur-md border-slate-800/60 shadow-xl">
-            <CardContent className="p-5 flex items-center justify-between">
-              <div>
-                <div className="text-sm text-slate-400 uppercase tracking-widest font-semibold mb-1">Fraud Alerts</div>
-                <div className="text-4xl font-bold text-red-400">{stats.alerts}</div>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 animate-pulse">
-                <span className="text-red-400 text-xl">🚨</span>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card className="bg-slate-900/40 backdrop-blur-md border-slate-800/60 shadow-xl">
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-slate-400 uppercase tracking-widest font-semibold mb-1">Total Monitored</div>
+                  <div className="text-4xl font-bold text-slate-100">{stats.total}</div>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                  <span className="text-blue-400 text-xl">📡</span>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-slate-900/40 backdrop-blur-md border-slate-800/60 shadow-xl">
+              <CardContent className="p-5 flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-slate-400 uppercase tracking-widest font-semibold mb-1">High Risk Events</div>
+                  <div className="text-4xl font-bold text-red-400">{highRiskCount}</div>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 animate-pulse">
+                  <AlertTriangle className="text-red-400 text-xl" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Tabs */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { fetchExplanation, type Transaction } from '@/api/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,9 +19,10 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
 
   if (alerts.length === 0) {
     return (
-      <div className="text-center py-20 text-slate-400">
-        <div className="text-4xl mb-4 opacity-50">🔍</div>
-        <p>No fraud alerts yet. Add a suspicious transaction or start the live feed.</p>
+      <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center text-slate-400">
+        <div className="mb-3 text-4xl opacity-60">🔍</div>
+        <p className="text-base font-medium text-slate-200">No fraud alerts yet.</p>
+        <p className="mt-2 text-sm">Add a suspicious transaction or start the live feed to populate the review queue.</p>
       </div>
     );
   }
@@ -33,22 +34,27 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
       const res = await fetchExplanation({ ...t, language });
       setExplanations(prev => ({ ...prev, [key]: res.explanation }));
     } catch (e) {
-      setExplanations(prev => ({ ...prev, [key]: "Error generating explanation." }));
+      setExplanations(prev => ({ ...prev, [key]: 'Error generating explanation.' }));
     }
     setLoadingExp(prev => ({ ...prev, [key]: false }));
   };
 
   return (
     <div className="flex flex-col gap-4 pr-2">
-      <p className="text-sm text-slate-400">Showing {alerts.length} fraud alert{alerts.length !== 1 ? 's' : ''}</p>
-      
+      <div className="flex items-center justify-between rounded-xl border border-slate-800/60 bg-slate-900/40 px-4 py-3">
+        <p className="text-sm text-slate-400">Showing {alerts.length} fraud alert{alerts.length !== 1 ? 's' : ''}</p>
+        <div className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-red-300">
+          Review queue
+        </div>
+      </div>
+
       {alerts.map((alert, idx) => {
         const s = alert.risk_score || 0;
         const color = getRiskColor(s, threshold);
         const bg = getRiskBg(s, threshold);
         const isHigh = s >= threshold;
         const expKey = `${alert.transaction_id}-${idx}-${language}`;
-        
+
         const shapData = (alert.top_features || []).map(f => ({
           name: language === 'hindi' ? f.label_hi : f.label_en,
           value: Math.abs(f.shap_value),
@@ -57,10 +63,10 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
         }));
 
         return (
-          <Card key={`${alert.transaction_id}-${idx}`} className={`bg-card/60 backdrop-blur border-l-4 ${isHigh ? 'border-l-red-500 shadow-lg shadow-red-500/10' : 'border-l-yellow-500 shadow-lg shadow-yellow-500/10'}`}>
+          <Card key={`${alert.transaction_id}-${idx}`} className={`bg-slate-900/60 backdrop-blur border-l-4 ${isHigh ? 'border-l-red-500 shadow-lg shadow-red-500/10' : 'border-l-yellow-500 shadow-lg shadow-yellow-500/10'}`}>
             <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-base font-bold text-slate-100 flex items-center gap-3">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <CardTitle className="flex items-center gap-3 text-base font-bold text-slate-100">
                   <span className="opacity-50">#{idx + 1}</span> {alert.transaction_id?.substring(0, 20)}
                   <Badge className={`${bg} ${color}`}>{isHigh ? 'HIGH RISK' : 'MEDIUM RISK'}</Badge>
                 </CardTitle>
@@ -68,7 +74,7 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-6 text-sm text-slate-400 border-t border-border pt-3 mb-4 flex-wrap">
+              <div className="mb-4 flex flex-wrap gap-4 border-t border-border/60 pt-3 text-sm text-slate-400">
                 <span>💰 <strong className="text-slate-200">₹{alert.amount.toLocaleString('en-IN')}</strong></span>
                 <span>🕐 {alert.hour.toString().padStart(2, '0')}:00</span>
                 <span className="capitalize">🏪 {alert.merchant_category}</span>
@@ -78,21 +84,20 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
                 <span>🎯 Score: <strong className={color}>{s.toFixed(1)}</strong>/100</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                {/* SHAP Chart */}
-                <div className="md:col-span-5 bg-black/20 p-4 rounded-lg border border-border/50">
-                  <p className="text-xs text-slate-400 mb-2">🔍 SHAP Risk Factors (🔴 risk | 🟢 normal)</p>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-start">
+                <div className="rounded-lg border border-border/50 bg-black/20 p-4 md:col-span-5">
+                  <p className="mb-2 text-xs text-slate-400">🔍 SHAP Risk Factors (🔴 risk | 🟢 normal)</p>
                   {shapData.length > 0 ? (
                     <div className="h-40">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={shapData} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
                           <XAxis type="number" hide />
                           <YAxis dataKey="name" type="category" width={80} tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
-                          <Tooltip 
+                          <Tooltip
                             content={({ active, payload }) => {
                               if (active && payload && payload.length) {
                                 return (
-                                  <div className="bg-slate-900 border border-slate-800 p-2 rounded text-xs shadow-xl">
+                                  <div className="rounded border border-slate-800 bg-slate-900 p-2 text-xs shadow-xl">
                                     <p className="text-slate-300">{payload[0].payload.name}</p>
                                     <p className="font-bold text-slate-100">{payload[0].payload.displayValue}</p>
                                   </div>
@@ -110,29 +115,28 @@ export function FraudAlerts({ alerts, threshold, language }: FraudAlertsProps) {
                       </ResponsiveContainer>
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-500 italic py-4">SHAP values not available.</p>
+                    <p className="py-4 text-xs italic text-slate-500">SHAP values not available.</p>
                   )}
                 </div>
 
-                {/* AI Explanation */}
-                <div className="md:col-span-7 flex flex-col items-start h-full">
+                <div className="flex h-full flex-col items-start md:col-span-7">
                   {!explanations[expKey] && !loadingExp[expKey] ? (
-                    <Button onClick={() => handleExplain(alert, idx)} variant="secondary" className="mt-4">
-                      <Bot className="w-4 h-4 mr-2" /> 
+                    <Button onClick={() => handleExplain(alert, idx)} variant="secondary" className="mt-4 rounded-xl">
+                      <Bot className="mr-2 h-4 w-4" />
                       {language === 'hindi' ? 'स्पष्टीकरण देखें' : 'Get AI Explanation'}
                     </Button>
                   ) : loadingExp[expKey] ? (
-                    <div className="flex items-center text-sm text-slate-400 mt-4 animate-pulse">
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    <div className="mt-4 flex items-center text-sm text-slate-400 animate-pulse">
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                       Generating explanation...
                     </div>
                   ) : (
                     <div className="w-full">
-                      <div className="bg-blue-950/20 border border-blue-900/50 p-4 rounded-lg text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
+                      <div className="rounded-lg border border-blue-900/50 bg-blue-950/20 p-4 text-sm leading-relaxed text-slate-300 whitespace-pre-wrap">
                         {explanations[expKey]}
                       </div>
-                      <Button onClick={() => handleExplain(alert, idx)} variant="ghost" size="sm" className="mt-2 text-xs text-slate-500 hover:text-slate-300">
-                        <RefreshCw className="w-3 h-3 mr-2" />
+                      <Button onClick={() => handleExplain(alert, idx)} variant="ghost" size="sm" className="mt-2 rounded-xl text-xs text-slate-500 hover:text-slate-300">
+                        <RefreshCw className="mr-2 h-3 w-3" />
                         {language === 'hindi' ? 'पुनः उत्पन्न' : 'Regenerate'}
                       </Button>
                     </div>

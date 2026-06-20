@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,11 @@ export function Sidebar({ language, setLanguage, liveActive, setLiveActive, onCl
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="rounded-xl border border-blue-500/20 bg-gradient-to-br from-blue-500/15 to-slate-900/60 p-3">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-blue-300">Mission control</p>
+        <p className="mt-2 text-sm font-semibold text-white">Simulate suspicious UPI activity and inspect the model’s reasoning in seconds.</p>
+      </div>
+
       {/* Live Badge */}
       <div className="flex justify-center">
         {liveActive ? (
@@ -70,12 +75,12 @@ export function Sidebar({ language, setLanguage, liveActive, setLiveActive, onCl
         <Label>🎮 Demo Controls</Label>
         <p className="text-xs text-muted-foreground">Synthetic txns · no bank connection</p>
         <div className="grid grid-cols-2 gap-2">
-          <Button variant="destructive" className="w-full text-xs" onClick={() => onDemoTxn('fraud')}><Zap className="w-3 h-3 mr-1"/> Fraud Txn</Button>
-          <Button variant="outline" className="w-full text-xs" onClick={() => onDemoTxn('safe')}><CheckCircle className="w-3 h-3 mr-1"/> Safe Txn</Button>
+          <Button variant="destructive" className="w-full rounded-xl text-xs" onClick={() => onDemoTxn('fraud')}><Zap className="w-3 h-3 mr-1"/> Fraud Txn</Button>
+          <Button variant="outline" className="w-full rounded-xl text-xs" onClick={() => onDemoTxn('safe')}><CheckCircle className="w-3 h-3 mr-1"/> Safe Txn</Button>
         </div>
         <Button 
           variant={liveActive ? "secondary" : "default"} 
-          className="w-full"
+          className="w-full rounded-xl"
           onClick={() => setLiveActive(!liveActive)}
         >
           {liveActive ? <><StopCircle className="w-4 h-4 mr-2" /> Stop Feed</> : <><PlayCircle className="w-4 h-4 mr-2" /> Start Live Feed</>}
@@ -131,7 +136,7 @@ export function Sidebar({ language, setLanguage, liveActive, setLiveActive, onCl
             <Label htmlFor="new-merch" className="text-xs">New Merchant</Label>
           </div>
         </div>
-        <Button className="w-full mt-2 bg-blue-600 hover:bg-blue-700" onClick={() => onManualAnalyze({
+        <Button className="w-full mt-2 rounded-xl bg-blue-600 hover:bg-blue-700" onClick={() => onManualAnalyze({
           transaction_id: "MANUAL-CHECK",
           amount: amt, hour: hour[0], merchant_category: cat,
           device_change: dev ? 1 : 0, geo_distance_km: geo,
